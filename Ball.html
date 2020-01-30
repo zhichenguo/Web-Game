@@ -1,0 +1,103 @@
+<!-- Zhichen Guo -- CpSc 217 Fall 2014 Term Project -- Login ID: zxg1003 --> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset=utf-8>
+    <title>untitle</title>
+    <style>
+        .rect {
+            position: absolute;
+            left: 350px;
+            top: 620px;
+        }
+        .ball {
+            position: absolute;
+            left: 400px;
+            top: 605px;
+        }
+    </style>    
+</head>
+<body>
+    <h1>Bouncy Ball</h1>
+    <form name="form1">        
+        <img src="none.jpg" name="back" width="800" height="600">
+        <img class="rect" src="rectangle.jpg" name="a" >
+        <img class="ball" src="ball.jpg" name="a" >
+        <br>Your score: <input type="text" value="0" name="yourScore">
+    <h1>Left click mouse to start; The ball will speed up each time bounce back</h1>
+    </form>
+    <script>
+        //  JavaScript code ----- by Zhichen Guo ----- zxg1003
+        var leftBall = 400; // horicontal position of the ball
+        var topBall = 605; // vertical position of the ball
+        var horizDir = 1; // horizontal direction
+        var vertDir = 1; // vertical direction
+        var leftDrect = 0; // record the horizontal position of mouse
+        var score = 0; // store the scores
+        var speed = 5; // store the speed the ball moving 
+        
+        // click to start the game
+        document.form1.back.addEventListener('click', function(event) {
+            // reset all the variable for a new game
+            leftBall = 400;
+            topBall = 605;
+            horizDir = 1;
+            vertDir = 1;
+            leftDrect = 0;
+            score = 0;
+            speed = 5;
+            document.form1.yourScore.value=score; // update the score box
+            var ani = setTimeout(move, 20); // set timer for animation
+        }); 
+      
+        function move() { // control the moving of the ball
+            // the ball at left or right side change the horizontal direction
+            if ((leftBall>790)||(leftBall<10)) 
+                (horizDir == 1) ? (horizDir = 2) : (horizDir = 1);            
+            // the ball at top, change vertical direction
+            if (topBall<80)  { 
+                vertDir=2;
+                if(speed<20) // speed up
+                    speed++;
+                score++; // add 1 point to score
+                document.form1.yourScore.value=score; // show the score in box
+            }
+            // the ball touch the rectangle board, change vertical direction
+            if ((topBall>600)&&(leftBall>(leftDrect-50))&&
+                (leftBall<(leftDrect+50))){
+                vertDir=1;
+            }            
+            // the ball under the rectangle board, Game Over!
+            if (topBall>625){
+                alert ("Game Over! Your score is " + score);
+                clearTimeout(ani);
+            }            
+            // horizontal direction
+            if (horizDir == 1){ // the ball move from left to right
+                leftBall += speed;
+                document.images[2].style.left = leftBall + "px";
+            }
+            else if (horizDir == 2){ // the ball move from right to left
+                leftBall -= speed;
+                document.images[2].style.left = leftBall + "px";
+            }    
+            // vertical direction
+            if (vertDir == 1){ // the ball move from bottom to top
+                topBall -= speed;
+                document.images[2].style.top = topBall + "px";
+            }
+            else if (vertDir == 2){ // the ball move from top to bottom
+                topBall += speed;
+                document.images[2].style.top = topBall + "px";
+            }
+            setTimeout(move, 20); // set timer for animation
+        }
+
+        // Let the rectangle box move with mouse at horizontal direction
+        document.form1.back.addEventListener('mousemove', function(event){
+            leftDrect = event.clientX; // get the horizontal coordinate of mouse
+            document.images[1].style.left = leftDrect - 50 + "px";
+        });      
+    </script>
+</body>
+</html>
